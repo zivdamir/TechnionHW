@@ -12,7 +12,9 @@
 namespace mtm {
 
     Game::Game(int height, int width) : row_size(height), col_size(width) {
-
+        if(height <= 0 || width <= 0){
+            throw IllegalArgument();
+        }
         board.resize(height, std::vector<std::shared_ptr< Character>>
         (width, std::shared_ptr<Character>(nullptr)));
         char_arr.resize(height*width,' ');
@@ -111,7 +113,7 @@ namespace mtm {
             throw CellEmpty();
         }
         int steps_range = board[src_coordinates.row][src_coordinates.col]->getMaxSteps();
-        int distance = src_coordinates.distance(src_coordinates, dst_coordinates);
+        int distance = GridPoint::distance(src_coordinates, dst_coordinates);
         if (distance > steps_range)
         {
             throw MoveTooFar();
@@ -147,7 +149,7 @@ namespace mtm {
         //need to add one more check here.
 
         //ATTACK !    
-            board[src_coordinates.row][src_coordinates.col].get()->attack(src_coordinates,dst_coordinates,this->board);
+            board[src_coordinates.row][src_coordinates.col].get()->specialAttack(src_coordinates,dst_coordinates,this->board);
             this->updateCharArray();
     }
 
@@ -232,25 +234,25 @@ namespace mtm {
             return 'm';
         }
 
-        if(character.get()->getType()==SNIPER)
+        if(character.get()->getType() == SNIPER)
         {
-            if(character.get()->getTeam()==POWERLIFTERS)
+            if(character.get()->getTeam() == POWERLIFTERS)
                 return 'N';
             return 'n';
         }
         return ' ';
     }
 
-    int Game::calculateDistance(const GridPoint& p1, const GridPoint& p2) {
-        int x = p1.row - p2.row;
-        if (x < 0)
-            x = x * -1;
-        int y = p1.col - p2.col;
-        if (y < 0)
-            y = y * -1;
+    // int Game::calculateDistance(const GridPoint& p1, const GridPoint& p2) {
+    //     int x = p1.row - p2.row;
+    //     if (x < 0)
+    //         x = x * -1;
+    //     int y = p1.col - p2.col;
+    //     if (y < 0)
+    //         y = y * -1;
 
-        return x + y;
-    }
+    //     return x + y;
+    // }
 
     void Game::updateCharArray() {
         for (int i = 0; i < this->row_size; i++) {

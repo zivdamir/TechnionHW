@@ -20,8 +20,11 @@ namespace mtm {
         int max_steps; // represent an upper bound to the amount of steps a unit can walk in a single direction.
         int ammo_shooting; // specifies the number of ammo points that will be reduced from calling "special attack" function.
         // this number also specifies the minimal number of ammo points that allows a unit to perform its "special attack".
-        Character(int health, int ammo, int range, int power, Team team,CharacterType type, int ammo_reload=0,int max_steps=0,int ammo_shooting=0);
+        Character(const int& health, const int& ammo, const int& range,
+                  const int& power, const Team& team, const CharacterType& type,
+                  const int& ammo_reload=0, const int& max_steps=0, const int& ammo_shooting=0);
     public:
+
         ~Character() = default; // as there are no memory allocation, no need for explicit deletion.
         Character(const Character &hero) = default; // no explicit memory allocation in consturction implies no need for explicit copy constructor.
         Character &operator=(const Character& hero) = default; // default operator= produced by compiler provides the same functionality.
@@ -32,7 +35,7 @@ namespace mtm {
         @param dest- the coordinate to attack.
         @param board - the board in which the attack performs it's special attack.
         */
-         virtual void specialAttack(const GridPoint& source, const GridPoint &dest ,std::vector<std::vector<std::shared_ptr < Character>>>& board);
+         virtual void specialAttack(const GridPoint& source, const GridPoint &dest ,std::vector<std::vector<std::shared_ptr < Character>>>& board) = 0;
 
          /* isValidMove - a virtual function that check if the charcter can perform a given move.
          @param source- the coordinate of the charcter.
@@ -41,7 +44,7 @@ namespace mtm {
          @return true- the move is valid.
          @return false- if the move is not valid.
          */
-         virtual bool isValidMove(const GridPoint &source,const GridPoint& dest,std::vector<std::vector<std::shared_ptr < Character>>>& board );
+         bool isValidMove(const GridPoint &source,const GridPoint& dest,std::vector<std::vector<std::shared_ptr < Character>>>& board ) const;
 
          /* isAttackValid- function to check if the attack is valid.
          @param source- the coordinate of the charcter who attack.
@@ -50,7 +53,7 @@ namespace mtm {
          @return true- the attack is valid.
          @return false- if the attack is not valid.
          */
-         virtual void isAttackValid(const GridPoint& source,const GridPoint& dest,std::vector<std::vector<std::shared_ptr < Character>>>& board);
+         virtual void isAttackValid(const GridPoint& source,const GridPoint& dest,std::vector<std::vector<std::shared_ptr < Character>>>& board) const=0;
 
          /* getUniqueAmmo- a virtual function to get for each character his unique num of ammo when reload.
          */
@@ -70,7 +73,7 @@ namespace mtm {
 
          -if damage is less then zero, it means healing
          */
-         void updateHealth(int damage);
+         void updateHealth(const int& damage);
 
          /* function getAmmo - return the ammo of the character.
          */
@@ -83,7 +86,7 @@ namespace mtm {
          /* updateAmmo - virtual function to update the ammo.
          @param ammo- the amount of ammo to add.
          */
-         virtual void updateAmmo(int ammo)=0;
+         void updateAmmo(const int& ammo);
 
          /*
           * getPower- return the power of the charcter.
@@ -94,22 +97,15 @@ namespace mtm {
          * getTeam- return the type of team.
          */
          Team getTeam() const;
-        CharacterType getType() const;
+         CharacterType getType() const;
          virtual Character& clone()=0;
         //general functions that will be used within GameClass;
-
-        /* attack- a function who call the special attack and make the damage.
-        *@param source- the coorinates of the attacker.
-        *@param dest- the coordinate to attack.
-        *@param - board - the player who attack
-        */
-        void attack(const GridPoint& source,const GridPoint& dest,std::vector<std::vector<std::shared_ptr <Character>>>& board);
 
         /* isSameTeam - a boolean function to check if the players in same team.
         @param character - the character to compare.
         @return true- if they in the same team, if not, return false.
         */
-        bool isSameTeam(const Character& character) const;//we cannot pass abstarct cas
+        bool isSameTeam(const Character& character) const;
 
 
         void move(std::vector<std::vector<std::shared_ptr < Character>>> board,GridPoint dest);

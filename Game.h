@@ -20,7 +20,7 @@ namespace mtm {
         std::vector<std::vector<std::shared_ptr < Character>>> board;
         std::vector<char> char_arr;
         bool isLocationValid(const GridPoint& point);
-        int calculateDistance(const GridPoint& p1,const GridPoint& p2);
+        //int calculateDistance(const GridPoint& p1,const GridPoint& p2);
         char convertToChar(std::shared_ptr <Character> character);
         void updateCharArray();
 
